@@ -1,6 +1,14 @@
-# Getting Started with Create React App
+# Fullstack Fuel
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The source code for the Developer Quickstart by Fuel Labs. This guide walks developers through building a dapp on Fuel, from beginning to end. We will cover:
+
+- Writing a smart contract
+- Writing tests
+- Building a frontend
+
+## Need help?
+
+Join the [Fuel Labs discord](https://discord.gg/6BJDRxxg6F) for support
 
 ## Available Scripts
 
