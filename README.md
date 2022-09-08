@@ -3,6 +3,7 @@
 Fuel Labs is building Fuel, the fastest modular execution layer. Learn more about Fuel:
 - [Fuel docs](https://fuellabs.github.io/fuel-docs/master/index.html)
 - Getting Fuelpilled: Why Developers Should Be Looking at Fuel
+- [Awesome Fuel](https://github.com/FuelLabs/awesome-fuel), a maintained and comprehensive list of awesome Fuel resources!
 
 # Developer Quickstart
 
