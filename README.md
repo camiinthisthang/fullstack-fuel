@@ -1,12 +1,8 @@
-# Fullstack Fuel
+# Fuel
 
-This guide walks developers through building a dapp on Fuel, from beginning to end. We will cover:
-
-- Writing a smart contract
-- Writing tests
-- Building a frontend
-
-# Let's Build
+Fuel Labs is building Fuel, the fastest modular execution layer. Learn more about Fuel:
+- [Fuel docs](https://fuellabs.github.io/fuel-docs/master/index.html)
+- Getting Fuelpilled: Why Developers Should Be Looking at Fuel
 
 # Developer Quickstart
 
@@ -62,8 +58,23 @@ First, let's [install the Sway toolchain](https://github.com/FuelLabs/fuelup).
 Then with `forc` installed, create a contract project inside of your `fuel-project` folder:
 
 ```sh
-cd fuel-project
-forc new counter_contract
+$ cd fuel-project
+$ forc new counter_contract
+To compile, use `forc build`, and to run tests use `forc test`
+
+----
+
+Read the Docs:
+- Sway Book: https://fuellabs.github.io/sway/latest
+- Rust SDK Book: https://fuellabs.github.io/fuels-rs/latest
+- TypeScript SDK: https://github.com/FuelLabs/fuels-ts
+
+Join the Community:
+- Follow us @SwayLang: https://twitter.com/SwayLang
+- Ask questions in dev-chat on Discord: https://discord.com/invite/xfpK4Pe
+
+Report Bugs:
+- Sway Issues: https://github.com/FuelLabs/sway/issues/new
 ```
 
 Here is the project that `Forc` has initialized:
@@ -78,7 +89,7 @@ Here is the project that `Forc` has initialized:
         └── harness.rs
 ```
 
-`Forc.toml` is the _manifest file_ (similar to `Cargo.toml` for Cargo or `package.json` for Node) and defines project metadata such as the project name and dependencies. You'll notice a `cargo.toml` file because `forc` uses `cargo` under the hood.
+`Forc.toml` is the _manifest file_ (similar to `Cargo.toml` for Cargo or `package.json` for Node) and defines project metadata such as the project name and dependencies. You'll notice a `Cargo.toml` file because `forc` uses `cargo` under the hood.
 
 Open your project in a code editor and delete the boilerplate code in `src/main.sw` so that you start with an empty file.
 
@@ -100,7 +111,7 @@ storage {
 
 An ABI defines an interface, and there is no function body in the ABI. A contract must either define or import an ABI declaration and implement it. It is considered best practice to define your ABI in a separate library and import it into your contract because this allows callers of the contract to import and use the ABI in scripts to call your contract.
 
-For simplicity, we will define the ABI natively in the contract.
+For simplicity, we will define the ABI directly in the contract file.
 
 ```sway
 abi Counter {
@@ -114,7 +125,7 @@ abi Counter {
 
 ### Going line by line
 
-`#[storage(read, write)]` is an annotation which denotes that this function has permission to read and write a value in storage.
+`#[storage(read, write)]` is an annotation which denotes that this function has permission to read and write values in storage.
 
 `fn increment();` - We're introducing the functionality to increment and denoting it shouldn't return any value.
 
@@ -130,7 +141,7 @@ Below your ABI definition, you will write the implementation of the functions de
 impl Counter for Contract {
     #[storage(read)]
     fn count() -> u64 {
-      return storage.counter;
+      storage.counter
     }
     #[storage(read, write)]
     fn increment(){
@@ -194,12 +205,7 @@ impl Counter for Contract {
 From inside the `fuel-project/counter_contract` directory, run the following command to build your contract:
 
 ```sh
-forc build
-```
-
-You should see something like this output:
-
-```console
+$ forc build
   Compiled library "core".
   Compiled library "std".
   Compiled contract "counter_contract".
@@ -226,14 +232,7 @@ async fn can_get_contract_id() {
 Run the following command in the terminal:
 
 ``` console
-forc test
-```
-
-> Note: The `forc test` command is in the process of being reworked to perform in-language unit testing, at which point we will recommend using `cargo` directly for your Sway+Rust integration testing. See [this issue](https://github.com/FuelLabs/sway/issues/1833) for more details.
-
-You'll see something like this as your output:
-
-```console
+$ forc test
   Compiled library "core".
   Compiled library "std".
   Compiled contract "counter_contract".
@@ -242,6 +241,9 @@ You'll see something like this as your output:
   test can_get_contract_id ... ok
   test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
 ```
+
+> **Note**
+> The `forc test` command is in the process of being reworked to perform in-language unit testing, at which point we will recommend using `cargo` directly for your Sway+Rust integration testing. See [this issue](https://github.com/FuelLabs/sway/issues/1833) for more details.
 
 ## Deploy the Contract
 
@@ -277,11 +279,16 @@ The terminal will output a `transaction id to sign` and prompt you for a signatu
 
 Grab the `transaction id` from your other terminal and sign with a specified account by running the following command:
 
-`forc wallet sign` + `[transaction id here, without brackets]` + `[the account number, without brackets]`
+``` console
+forc wallet sign` + `[transaction id here, without brackets]` + `[the account number, without brackets]`
+```
 
-Your command should look like this: 
-``` console 
-forc wallet sign 16d7a8f9d15cfba1bd000d3f99cd4077dfa1fce2a6de83887afc3f739d6c84df 0
+Your command should look like this:
+
+``` console
+$ forc wallet sign 16d7a8f9d15cfba1bd000d3f99cd4077dfa1fce2a6de83887afc3f739d6c84df 0
+Please enter your password to decrypt initialized wallet's phrases:
+Signature: 736dec3e92711da9f52bed7ad4e51e3ec1c9390f4b05caf10743229295ffd5c1c08a4ca477afa85909173af3feeda7c607af5109ef6eb72b6b40b3484db2332c
 ```
 
 Enter your password when prompted, and you'll get back a `signature`. Save that signature, and return to your other terminal window, and paste that in where its prompting you to `provide a signature for this transaction`.
@@ -305,14 +312,13 @@ Now we are going to
 
 To split better our project let's create a new folder `frontend` and initialize our project inside it.
 
-In the terminal, go back up one directory and initialize a react project.
+In the terminal, go back up one directory and initialize a react project using [`Create React App`](https://create-react-app.dev/).
 
 ```sh
-cd ..
-npx create-react-app frontend --template typescript
+$ cd ..
+$ npx create-react-app frontend --template typescript
+Success! Created frontend at Fuel/fuel-project/frontend
 ```
-
-The command will generate a react app using [`Create React App`](https://create-react-app.dev/).
 
 You should now have your outer folder, `fuel-project`, with two folders inside: `front-end` and `fuel-contract`
 
@@ -333,9 +339,11 @@ On this step we need to install 3 dependencies for the project:
 Move into the `frontend` folder, then install the dependencies:
 
 ```sh
-cd frontend
-npm install fuels --save
-npm install fuelchain typechain-target-fuels --save-dev
+$ cd frontend
+$ npm install fuels --save
+added 65 packages, and audited 1493 packages in 4s
+$ npm install fuelchain typechain-target-fuels --save-dev
+added 33 packages, and audited 1526 packages in 2s
 ```
 
 ##### Generating contract types
@@ -347,12 +355,7 @@ If you see the folder `fuel-project/counter_contract/out` you will be able to se
 Inside `counter-contract/frontend` run;
 
 ```sh
-npx fuelchain --target=fuels --out-dir=./src/contracts ../counter_contract/out/debug/*-abi.json
-```
-
-You should see something like this:
-
-```sh
+$ npx fuelchain --target=fuels --out-dir=./src/contracts ../counter_contract/out/debug/*-abi.json
 Successfully generated 4 typings!
 ```
 
@@ -375,16 +378,15 @@ console.log("address", wallet.address.toString());
 console.log("private key", wallet.privateKey);
 ```
 
-In a terminal, run the following command: 
-``` console 
-node createWallet.js
-```
+In a terminal, run the following command:
 
-You should see an output that looks like this:
-```console
+``` console
+$ node createWallet.js
 address fuel160ek8t7fzz89wzl595yz0rjrgj3xezjp6pujxzt2chn70jrdylus5apcuq
 private key 0x719fb4da652f2bd4ad25ce04f4c2e491926605b40e5475a80551be68d57e0fcb
 ```
+
+>Note: You should use generated address and private key.
 
 Save the private key, you will need this later to set it as a string value for a variable `WALLET_SECRET` in your `App.tsx` file. More on that below.
 
@@ -469,7 +471,16 @@ Now it's time to have fun run the project on your browser;
 Inside `fuel-project/frontend` run;
 
 ```sh
-npm start
+$ npm start
+Compiled successfully!
+
+You can now view frontend in the browser.
+
+  Local:            http://localhost:3001
+  On Your Network:  http://192.168.4.48:3001
+
+Note that the development build is not optimized.
+To create a production build, use npm run build.
 ```
 
 ![screenshot of the UI](./images/quickstart-dapp-screenshot.png)
@@ -490,51 +501,3 @@ If you make changes to your contract, here are the steps you should take to get 
 ## Need Help?
 
 Head over to the [Fuel discord](https://discord.com/invite/fuelnetwork) to get help.
-
-
-## Need help?
-
-Join the [Fuel Labs discord](https://discord.gg/6BJDRxxg6F) for support
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
